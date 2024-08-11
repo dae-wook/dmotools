@@ -16,7 +16,12 @@ public class SealResponseDto {
 	
 	private Integer maxIncrease;
 	
-    private String statType;
+	private String statType;
+	
+	private boolean buyable;
+	
+	private int masterCount;
+	
     
     public static SealResponseDto of(Seal seal) {
     	return SealResponseDto.builder()
@@ -24,6 +29,8 @@ public class SealResponseDto {
     			.name(seal.getName())
     			.maxIncrease(seal.getMaxIncrease())
     			.statType(seal.getStatType().name())
+    			.buyable(seal.isBuyable())
+    			.masterCount(seal.getMasterCount())
     			.build();
     }
 

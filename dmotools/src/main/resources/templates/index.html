@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="app">
+    <p id="app1">SSE readyState:  ${sseMsg2}</p>
+    <p id="app2">SSE open?  ${sseMsg3||'-'}</p>
+    <p id="app3">SSE onmessage?  ${sseMsg4||'-'}</p>
+    <p id="app4">SSE error?  ${sseMsg5||'-'}</p>
+  </div>
+<script>
+    const eventSource = new EventSource('/api/alarms/subscribe');
+
+    eventSource.onopen = function(e) {
+        document.getElementById('app1').innerHTML = `SSE connection is open`;
+        document.getElementById('app2').innerHTML = `Connection is open!!`;
+        console.log("Connection opened:", e);
+    };
+
+    eventSource.onmessage = function(event) {
+        document.getElementById('app3').innerHTML = `SSE onmessage: ${event.data}`;
+        console.log("Message received:", event.data);
+    };
+    
+    eventSource.addEventListener('sse', function (event) {
+		console.log(event.data)
+	});
+
+    eventSource.onerror = function(e) {
+        document.getElementById('app4').innerHTML = `SSE onerror`;
+        console.error("Error occurred:", e);
+
+        if (eventSource.readyState === EventSource.CLOSED) {
+            document.getElementById('app1').innerHTML = `SSE connection is closed`;
+        }
+    };
+</script>
+</body>
+</html>

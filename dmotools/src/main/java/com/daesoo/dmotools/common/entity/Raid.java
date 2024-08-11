@@ -5,13 +5,8 @@ package com.daesoo.dmotools.common.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.daesoo.dmotools.common.dto.StatType;
-
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,12 +16,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "seals")
+@Entity(name = "raids")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Seal {
+public class Raid {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,16 +29,8 @@ public class Seal {
 	
 	private String name;
 	
-	private Integer maxIncrease;
-	
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private StatType statType;
+	private String location;
     
-    private boolean buyable = true;
-    
-    private int masterCount;
-
-    @OneToMany(mappedBy = "seal", cascade = CascadeType.ALL)
-    private List<SealPrice> sealPriceList = new ArrayList<>();
+	@OneToMany(mappedBy = "raid", cascade = CascadeType.ALL)
+    private List<Timer> timers = new ArrayList<>();
 }
