@@ -19,6 +19,8 @@ public class TimerResponseDto {
 	
 	private Long id;
 	
+	private Long clientId;
+	
 	private LocalDateTime startAt;
 	
 	private int channel;
@@ -32,6 +34,7 @@ public class TimerResponseDto {
 	public static TimerResponseDto of(Timer timer) {
 		return TimerResponseDto.builder()
 				.id(timer.getId())
+				.clientId(timer.getClientId())
 				.startAt(timer.getStartAt())
 				.channel(timer.getChannel())
 				.voteCount(timer.getVoteCount())

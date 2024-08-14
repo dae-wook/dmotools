@@ -25,6 +25,8 @@ public class TimerRequestDto {
 	
 	private ServerType server;
 	
+	private Long clientId;
+	
 	public LocalDateTime getStartAt() {
 		return LocalDateTime.now().plusMinutes(this.timeRemaining);
 	}

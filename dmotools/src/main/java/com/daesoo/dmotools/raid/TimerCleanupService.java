@@ -28,7 +28,7 @@ public class TimerCleanupService {
         timerRepository.deleteAll(expiredTimers);
         for(Timer timer : expiredTimers) {
         	
-        	alarmService.notify(TimerResponseDto.of(timer), "time deleted", "removed");
+        	alarmService.notify(TimerResponseDto.of(timer), "time deleted", "removed", timer.getServer());
         }
     }
 }

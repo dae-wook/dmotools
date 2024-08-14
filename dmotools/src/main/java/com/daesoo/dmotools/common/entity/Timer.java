@@ -32,6 +32,9 @@ public class Timer {
 	private Long id;
 	
 	@Column(nullable = false)
+	private Long clientId;
+	
+	@Column(nullable = false)
 	private LocalDateTime startAt;
 	
 	@Column(nullable = false)
@@ -48,6 +51,7 @@ public class Timer {
 	
 	public static Timer create(TimerRequestDto dto, Raid raid) {
 		return Timer.builder()
+				.clientId(dto.getClientId())
 				.startAt(dto.getStartAt())
 				.channel(dto.getChannel())
 				.voteCount(dto.getVoteCount())

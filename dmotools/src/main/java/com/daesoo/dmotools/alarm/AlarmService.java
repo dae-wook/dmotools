@@ -3,9 +3,12 @@ package com.daesoo.dmotools.alarm;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import com.daesoo.dmotools.common.dto.ServerType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,35 +21,46 @@ public class AlarmService {
 
     private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
 
-    public SseEmitter subscribe() {
-        SseEmitter emitter = createEmitter();
+    public SseEmitter subscribe(ServerType serverType) {
+        Emitter emitter = createEmitter(serverType);
 
 
-        sendToClient(emitter, "EventStream Created.", "sse 접속 성공");
-        return emitter;
+        sendToClient(emitter, "sub", emitter, "sse 접속 성공");
+        return emitter.getEmitter();
     }
     
-    public List<SseEmitter> getSubscribers() {
+    public boolean cancel(Long clientId) {
+    	
+    	Emitter emitter = emitterRepository.findById(clientId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 emitter"));
+    	sendToClient(emitter, "disub", emitter, "SSE Connection closed");
+    	emitterRepository.delete(clientId);
+    	return true;
+    }
+    
+    
+    
+    public Map<Long, Emitter> getSubscribers() {
     	
     	return emitterRepository.findAll();
     }
     
-    public void notify(Object data, String comment, String type) {
-        notifyAll(data, comment, type);
+    public void notify(Object data, String comment, String type, ServerType serverType) {
+        notifyAll(data, comment, type, serverType);
     }
 
-    private void notifyAll(Object data, String comment, String type) {
-        List<SseEmitter> deadEmitters = new ArrayList<>();
-        
-        for (SseEmitter emitter : emitterRepository.findAll()) {
+    private void notifyAll(Object data, String comment, String type, ServerType serverType) {
+        Map<Long, Emitter> emitters = emitterRepository.findAllByServerType(serverType);
+        List<Long> deadEmitters = new ArrayList<>();
+        for (Long clientId : emitters.keySet()) {
+        	
             try {
-                emitter.send(SseEmitter.event()
+                emitters.get(clientId).getEmitter().send(SseEmitter.event()
                         .name(type)
                         .data(data)
                         .comment(comment));
             } catch (IOException e) {
                 // Handle the emitter that failed to send data
-                deadEmitters.add(emitter);
+                deadEmitters.add(clientId);
             }
         }
         
@@ -55,27 +69,39 @@ public class AlarmService {
     }
 
 
-    private void sendToClient(SseEmitter emitter, Object data, String comment) {
+    private void sendToClient(Emitter emitter, String type, Object data, String comment) {
         try {
-            emitter.send(SseEmitter.event()
-                    .name("sse")
+            emitter.getEmitter().send(SseEmitter.event()
+                    .name(type)
                     .data(data)
                     .comment(comment));
         } catch (IOException e) {
         	e.printStackTrace();
-            emitterRepository.delete(emitter);
-            emitter.completeWithError(e);
+            emitterRepository.delete(emitter.getClientId());
+            emitter.getEmitter().completeWithError(e);
         }
     }
 
 
-    private SseEmitter createEmitter() {
+    private Emitter createEmitter(ServerType serverType) {
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
-        emitterRepository.save(emitter);
-
-        emitter.onCompletion(() -> emitterRepository.delete(emitter));
-        emitter.onTimeout(() -> emitterRepository.delete(emitter));
-
-        return emitter;
+        Long clientId = emitterRepository.save(emitter, serverType);
+        emitter.onCompletion(() -> emitterRepository.delete(clientId));
+        emitter.onTimeout(() -> emitterRepository.delete(clientId));
+        
+        return Emitter.create(clientId, emitter, serverType);
     }
+
+	public boolean change(Long clientId, ServerType server) {
+		
+		Emitter emitter = emitterRepository.findById(clientId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 emitter"));
+		ServerType oldServer = emitter.getServer();
+		emitter.changeServer(server);
+		
+		emitterRepository.update(emitter);
+		
+		sendToClient(emitter, "server-changed", emitter, oldServer + " => " + emitter.getServer() + "서버 변경");
+		
+		return true;
+	}
 }

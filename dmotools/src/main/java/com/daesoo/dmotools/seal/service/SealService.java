@@ -71,7 +71,6 @@ public class SealService {
 
 
 	public List<SealPriceResponseDto> getOnePrice(String sortBy) {
-		System.out.println(sortBy);
 		List<SealPrice> sealPriceList = new ArrayList<>(); 
 		switch(sortBy) {
 			case "regCount" : sealPriceList = sealPriceRepository.findLatestSealPricesOrderedByRegCount(); break;

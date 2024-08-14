@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.daesoo.dmotools.alarm.AlarmService;
 import com.daesoo.dmotools.common.dto.ErrorMessage;
+import com.daesoo.dmotools.common.dto.ServerType;
 import com.daesoo.dmotools.common.entity.Raid;
 import com.daesoo.dmotools.common.entity.Timer;
 import com.daesoo.dmotools.common.repository.RaidRepository;
@@ -22,9 +23,9 @@ public class RaidService {
 	private final TimerRepository timerRepository;
 	private final AlarmService alarmService;
 
-	public List<RaidResponseDto> getRaids() {
+	public List<RaidResponseDto> getRaids(ServerType server) {
 		// TODO Auto-generated method stub
-		return raidRepository.findAll().stream().map(RaidResponseDto :: of).toList();
+		return raidRepository.findByTimerServerTypeOrNoTimers(server).stream().map(RaidResponseDto :: of).toList();
 	}
 
 	public TimerResponseDto createTimer(Long raidId, TimerRequestDto dto) {
@@ -37,7 +38,7 @@ public class RaidService {
 		
 //		timerRepository.save(timer)
 		TimerResponseDto responseDto = TimerResponseDto.of(timerRepository.save(timer));
-		alarmService.notify(responseDto, "time created", "created");
+		alarmService.notify(responseDto, "time created", "created", dto.getServer());
 		
 		
 		
@@ -45,19 +46,29 @@ public class RaidService {
 	}
 
 	@Transactional
-	public TimerResponseDto voteTimer(Long timerId) {
+	public TimerResponseDto voteTimer(Long timerId, Long clientId) {
 		// TODO Auto-generated method stub
 		
 		Timer timer = timerRepository.findById(timerId).orElseThrow(
 				() ->  new IllegalArgumentException(ErrorMessage.TIMER_NOT_FOUND.getMessage()));
 		
+		if(timer.getClientId() == clientId) {
+			throw new IllegalArgumentException(ErrorMessage.ACCESS_DENIED.getMessage());
+		}
 		
 		timer.increaseVoteCount();
 		
 		TimerResponseDto responseDto = TimerResponseDto.of(timer);
-		alarmService.notify(responseDto, "time voted", "voted");
+		alarmService.notify(responseDto, "time voted", "voted", timer.getServer());
 		
 		return responseDto;
+	}
+
+	public List<TimerResponseDto> getTimers(ServerType server) {
+		// TODO Auto-generated method stub
+		timerRepository.findAllByServer(server);
+		
+		return timerRepository.findAllByServer(server).stream().map(TimerResponseDto::of).toList();
 	}
 	
 }

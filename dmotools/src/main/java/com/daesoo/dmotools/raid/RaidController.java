@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daesoo.dmotools.common.dto.ResponseDto;
+import com.daesoo.dmotools.common.dto.ServerType;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,9 +26,9 @@ public class RaidController {
 
 	private final RaidService raidService;
 	
-	@GetMapping
-	public ResponseDto<List<RaidResponseDto>> getRaids() {
-		return ResponseDto.success(HttpStatus.OK, raidService.getRaids());
+	@GetMapping("/{server}")
+	public ResponseDto<List<RaidResponseDto>> getRaids(@PathVariable("server") ServerType server) {
+		return ResponseDto.success(HttpStatus.OK, raidService.getRaids(server));
 	}
 	
 	@PostMapping("/{raidId}/timers")
@@ -39,9 +41,10 @@ public class RaidController {
 	
 	@PutMapping("/timers/{timerId}/vote")
 	public ResponseDto<TimerResponseDto> voteTimer(
-			@PathVariable("timerId") Long timerId) {
+			@PathVariable("timerId") Long timerId,
+			@RequestParam("clientId") Long clientId) {
 		
-		return ResponseDto.success(HttpStatus.CREATED, raidService.voteTimer(timerId));
+		return ResponseDto.success(HttpStatus.CREATED, raidService.voteTimer(timerId, clientId));
 	}
 	
 }
