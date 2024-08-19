@@ -31,6 +31,12 @@ public class RaidController {
 		return ResponseDto.success(HttpStatus.OK, raidService.getRaids(server));
 	}
 	
+//	@GetMapping("/{server}/timers")
+//	public ResponseDto<List<TimerResponseDto>> getTimers(@PathVariable("server") ServerType server) {
+//		return ResponseDto.success(HttpStatus.OK, raidService.getTimers(server));
+//	}
+	
+	
 	@PostMapping("/{raidId}/timers")
 	public ResponseDto<TimerResponseDto> createTimer(
 			@PathVariable("raidId") Long raidId,

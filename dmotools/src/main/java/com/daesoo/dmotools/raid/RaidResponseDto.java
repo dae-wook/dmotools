@@ -16,6 +16,8 @@ public class RaidResponseDto {
 	private String name;
 	
 	private String location;
+	
+	private String channels;
     
     private List<TimerResponseDto> times = new ArrayList<>();
     
@@ -24,7 +26,12 @@ public class RaidResponseDto {
     			.id(raid.getId())
     			.name(raid.getName())
     			.location(raid.getLocation())
-    			.times(raid.getTimers().stream().map(TimerResponseDto::of).toList())
+    			.channels(raid.getChannels())
+//    			.times(raid.getTimers().stream().map(TimerResponseDto::of).toList())
     			.build();
+    }
+    
+    public void setTimer(List<TimerResponseDto> timers) {
+    	this.times = timers;
     }
 }

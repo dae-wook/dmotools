@@ -3,10 +3,13 @@ package com.daesoo.dmotools.common.entity;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.daesoo.dmotools.common.dto.ServerType;
 import com.daesoo.dmotools.raid.TimerRequestDto;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,6 +18,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,6 +49,9 @@ public class Timer {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
 	private ServerType server;
+    
+    @OneToMany(mappedBy = "timer", cascade = CascadeType.ALL)
+    private List<TimerVote> timerVotes = new ArrayList<>();
     
 	@ManyToOne
 	public Raid raid;

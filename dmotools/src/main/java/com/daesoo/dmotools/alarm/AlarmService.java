@@ -4,12 +4,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.daesoo.dmotools.common.dto.ServerType;
+import com.daesoo.dmotools.common.entity.Client;
+import com.daesoo.dmotools.common.repository.ClientRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -17,12 +22,23 @@ import lombok.RequiredArgsConstructor;
 public class AlarmService {
 
     private final EmitterRepository emitterRepository;
-
+    private final ClientRepository clientRepository;
 
     private static final Long DEFAULT_TIMEOUT = 600L * 1000 * 60;
 
-    public SseEmitter subscribe(ServerType serverType) {
-        Emitter emitter = createEmitter(serverType);
+   
+    public SseEmitter subscribe(ServerType serverType, Long clientId) {
+    	
+//    	Optional<Client> optionalClient = clientRepository.findByIpAddress(ipAddress);
+//    	Client client = null;
+//    	if(!optionalClient.isPresent()) { //클라이언트 정보가 없을때
+//    		client = clientRepository.save(Client.create(ipAddress));
+//    	}else {
+//    		client = optionalClient.get();
+//    	}
+    	
+    	
+        Emitter emitter = createEmitter(clientId, serverType);
 
 
         sendToClient(emitter, "sub", emitter, "sse 접속 성공");
@@ -43,6 +59,7 @@ public class AlarmService {
     	
     	return emitterRepository.findAll();
     }
+    
     
     public void notify(Object data, String comment, String type, ServerType serverType) {
         notifyAll(data, comment, type, serverType);
@@ -83,13 +100,16 @@ public class AlarmService {
     }
 
 
-    private Emitter createEmitter(ServerType serverType) {
+    private Emitter createEmitter(Long clientId, ServerType serverType) {
+    	
         SseEmitter emitter = new SseEmitter(DEFAULT_TIMEOUT);
-        Long clientId = emitterRepository.save(emitter, serverType);
-        emitter.onCompletion(() -> emitterRepository.delete(clientId));
-        emitter.onTimeout(() -> emitterRepository.delete(clientId));
+        Long id = emitterRepository.save(emitter, clientId, serverType);
         
-        return Emitter.create(clientId, emitter, serverType);
+        
+        emitter.onCompletion(() -> emitterRepository.delete(id));
+        emitter.onTimeout(() -> emitterRepository.delete(id));
+        
+        return Emitter.create(id, emitter, serverType);
     }
 
 	public boolean change(Long clientId, ServerType server) {
@@ -103,5 +123,18 @@ public class AlarmService {
 		sendToClient(emitter, "server-changed", emitter, oldServer + " => " + emitter.getServer() + "서버 변경");
 		
 		return true;
+	}
+
+	@Transactional
+	public Long getClientId(String ipAddress) {
+		// TODO Auto-generated method stub
+		Optional<Client> optionalClient = clientRepository.findByIpAddress(ipAddress);
+    	Client client = null;
+    	if(!optionalClient.isPresent()) { //클라이언트 정보가 없을때
+    		client = clientRepository.save(Client.create(ipAddress));
+    	}else {
+    		client = optionalClient.get();
+    	}
+		return client.getId();
 	}
 }

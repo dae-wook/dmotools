@@ -14,6 +14,12 @@ public interface RaidRepository extends JpaRepository<Raid, Long>{
 //    @Query("SELECT DISTINCT r FROM raids r LEFT JOIN r.timers t ON t.server = :serverType")
 //    List<Raid> findByTimerServerTypeOrNoTimers(@Param("serverType") ServerType serverType);
     
-	@Query("SELECT DISTINCT r FROM raids r LEFT JOIN FETCH r.timers t WHERE t.server = :serverType OR t IS NULL")
+//	@Query("SELECT DISTINCT r FROM raids r LEFT JOIN FETCH r.timers t WHERE t.server = :serverType OR t IS NULL")
+//	List<Raid> findByTimerServerTypeOrNoTimers(@Param("serverType") ServerType serverType);
+	
+//	@Query("SELECT DISTINCT r FROM raids r LEFT JOIN r.timers t WHERE t.server = :serverType OR t IS NULL")
+//	List<Raid> findByTimerServerTypeOrNoTimers(@Param("serverType") ServerType serverType);
+	
+	@Query("SELECT DISTINCT r FROM raids r LEFT JOIN r.timers t WHERE (t.server = :serverType OR t IS NULL) AND r.id IN (SELECT r2.id FROM raids r2 LEFT JOIN r2.timers t2)")
 	List<Raid> findByTimerServerTypeOrNoTimers(@Param("serverType") ServerType serverType);
 }

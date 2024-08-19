@@ -11,6 +11,7 @@ import com.daesoo.dmotools.alarm.AlarmService;
 import com.daesoo.dmotools.common.entity.Timer;
 import com.daesoo.dmotools.common.repository.TimerRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -22,13 +23,14 @@ public class TimerCleanupService {
     
 
     @Scheduled(fixedRate = 60000) // 1분마다 실행
+    @Transactional
     public void deleteExpiredTimers() {
         LocalDateTime now = LocalDateTime.now();
         List<Timer> expiredTimers = timerRepository.findAllByStartAtBefore(now);
         timerRepository.deleteAll(expiredTimers);
-        for(Timer timer : expiredTimers) {
-        	
-        	alarmService.notify(TimerResponseDto.of(timer), "time deleted", "removed", timer.getServer());
-        }
+//        for(Timer timer : expiredTimers) {
+//        	
+//        	alarmService.notify(TimerResponseDto.of(timer), "time deleted", "removed", timer.getServer());
+//        }
     }
 }

@@ -29,12 +29,13 @@ public class SealService {
 	private final SealRepository sealRepository;
 	private final SealPriceRepository sealPriceRepository;
 	
+	@Transactional
 	public List<SealResponseDto> getAllSeals() {
 		
 		return sealRepository.findAll().stream().map(SealResponseDto :: of).toList();
 	}
 
-	
+	@Transactional
 	public List<SealResponseDto> getSealsByStatType(StatType statType) {
 		
 		return sealRepository.findAllByStatType(statType).stream().map(SealResponseDto :: of).toList();
@@ -69,7 +70,7 @@ public class SealService {
 		return SealPriceResponseDto.of(sealPriceToUpdate);
 	}
 
-
+	@Transactional
 	public List<SealPriceResponseDto> getOnePrice(String sortBy) {
 		List<SealPrice> sealPriceList = new ArrayList<>(); 
 		switch(sortBy) {
@@ -83,7 +84,7 @@ public class SealService {
 		return sealPriceList.stream().map(SealPriceResponseDto :: of).toList();
 	}
 
-
+	@Transactional
 	public Page<SealPriceResponseDto> getSealPrice(Long sealId, Integer page, Integer size, String sortBy) {
 		
 		Seal seal = sealRepository.findById(sealId).orElseThrow(

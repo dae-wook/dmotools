@@ -2,37 +2,38 @@ package com.daesoo.dmotools.common.entity;
 
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "raids")
+@Entity(name = "timer_votes")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Raid {
+public class TimerVote {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	private String name;
+	@ManyToOne
+	private Timer timer;
 	
-	private String location;
+	@ManyToOne
+	private Client client;
 	
-	private String channels;
-    
-	@OneToMany(mappedBy = "raid", cascade = CascadeType.ALL)
-    private List<Timer> timers = new ArrayList<>();
+	public static TimerVote create(Timer timer, Client client) {
+		return TimerVote.builder()
+				.timer(timer)
+				.client(client)
+				.build();
+	}
+	
 }

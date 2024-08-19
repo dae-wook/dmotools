@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import com.daesoo.dmotools.common.dto.ServerType;
+import com.daesoo.dmotools.common.entity.Client;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,12 +19,10 @@ import lombok.RequiredArgsConstructor;
 public class EmitterRepository {
 
 	private final Map<Long, Emitter> emitters = new ConcurrentHashMap<>();
-	private final AtomicLong clientId = new AtomicLong(0L);
 
-    public Long save(SseEmitter emitter, ServerType serverType) {
-    	long id = clientId.getAndIncrement();
-    	emitters.put(id, Emitter.create(id, emitter, serverType));
-    	return id;
+    public Long save(SseEmitter emitter, Long clientId, ServerType serverType) {
+    	emitters.put(clientId, Emitter.create(clientId, emitter, serverType));
+    	return clientId;
     }
     
     public void update(Emitter emitter) {
