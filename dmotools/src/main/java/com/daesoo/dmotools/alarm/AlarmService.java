@@ -64,9 +64,14 @@ public class AlarmService {
     public void notify(Object data, String comment, String type, ServerType serverType) {
         notifyAll(data, comment, type, serverType);
     }
-
+    
     private void notifyAll(Object data, String comment, String type, ServerType serverType) {
-        Map<Long, Emitter> emitters = emitterRepository.findAllByServerType(serverType);
+        Map<Long, Emitter> emitters = null;
+        if(serverType == null) {
+        	emitters = emitterRepository.findAll();
+        } else {
+        	emitters = emitterRepository.findAllByServerType(serverType);        	
+        }
         List<Long> deadEmitters = new ArrayList<>();
         for (Long clientId : emitters.keySet()) {
         	

@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daesoo.dmotools.common.dto.ResponseDto;
 import com.daesoo.dmotools.common.dto.StatType;
-import com.daesoo.dmotools.seal.SealPriceResponseDto;
-import com.daesoo.dmotools.seal.SealResponseDto;
+import com.daesoo.dmotools.seal.dto.response.SealPriceResponseDto;
+import com.daesoo.dmotools.seal.dto.response.SealResponseDto;
 import com.daesoo.dmotools.seal.service.SealService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+
 
 @RestController
 @RequestMapping("/api/seals")

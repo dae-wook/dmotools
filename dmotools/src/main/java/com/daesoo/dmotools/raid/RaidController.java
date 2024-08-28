@@ -3,6 +3,7 @@ package com.daesoo.dmotools.raid;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daesoo.dmotools.common.dto.ResponseDto;
 import com.daesoo.dmotools.common.dto.ServerType;
+import com.daesoo.dmotools.user.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -40,9 +42,10 @@ public class RaidController {
 	@PostMapping("/{raidId}/timers")
 	public ResponseDto<TimerResponseDto> createTimer(
 			@PathVariable("raidId") Long raidId,
-			@RequestBody TimerRequestDto dto) {
+			@RequestBody TimerRequestDto dto,
+			@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		
-		return ResponseDto.success(HttpStatus.CREATED, raidService.createTimer(raidId, dto));
+		return ResponseDto.success(HttpStatus.CREATED, raidService.createTimer(raidId, dto, userDetails));
 	}
 	
 	@PutMapping("/timers/{timerId}/vote")

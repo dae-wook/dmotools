@@ -19,6 +19,7 @@ import com.daesoo.dmotools.common.repository.ClientRepository;
 import com.daesoo.dmotools.common.repository.RaidRepository;
 import com.daesoo.dmotools.common.repository.TimerRepository;
 import com.daesoo.dmotools.common.repository.TimerVoteRepository;
+import com.daesoo.dmotools.user.UserDetailsImpl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -68,13 +69,13 @@ public class RaidService {
 
 	
 	@Transactional
-	public TimerResponseDto createTimer(Long raidId, TimerRequestDto dto) {
+	public TimerResponseDto createTimer(Long raidId, TimerRequestDto dto, UserDetailsImpl userDetails) {
 
 		Raid raid = raidRepository.findById(raidId).orElseThrow(
 				() ->  new IllegalArgumentException(ErrorMessage.RAID_NOT_FOUND.getMessage()));
 		
 		
-		Timer timer = Timer.create(dto, raid);
+		Timer timer = Timer.create(dto, raid, userDetails);
 		
 //		timerRepository.save(timer)
 		TimerResponseDto responseDto = TimerResponseDto.of(timerRepository.save(timer));

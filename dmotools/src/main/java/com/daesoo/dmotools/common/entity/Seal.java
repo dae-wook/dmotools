@@ -34,6 +34,8 @@ public class Seal {
 	
 	private String name;
 	
+	private String engName;
+	
 	private Integer maxIncrease;
 	
     @Column(nullable = false)

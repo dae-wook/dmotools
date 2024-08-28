@@ -5,6 +5,7 @@ package com.daesoo.dmotools.raid;
 import java.time.LocalDateTime;
 
 import com.daesoo.dmotools.common.entity.Timer;
+import com.daesoo.dmotools.user.dto.UserResponseDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,8 @@ public class TimerResponseDto {
 	
 	private Long raidId;
 	
+	private UserResponseDto user;
+	
 	public static TimerResponseDto of(Timer timer) {
 		return TimerResponseDto.builder()
 				.id(timer.getId())
@@ -40,6 +43,7 @@ public class TimerResponseDto {
 				.voteCount(timer.getVoteCount())
 				.server(timer.getServer().name())
 				.raidId(timer.getRaid().getId())
+				.user(timer.getUser() != null ? UserResponseDto.of(timer.getUser(), null) : null)
 				.build();
 	}
 	

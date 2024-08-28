@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.daesoo.dmotools.common.dto.ServerType;
 import com.daesoo.dmotools.raid.TimerRequestDto;
+import com.daesoo.dmotools.user.UserDetailsImpl;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -46,6 +47,9 @@ public class Timer {
 	
 	private int voteCount;
 	
+	@ManyToOne
+	private User user;
+	
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
 	private ServerType server;
@@ -56,7 +60,7 @@ public class Timer {
 	@ManyToOne
 	public Raid raid;
 	
-	public static Timer create(TimerRequestDto dto, Raid raid) {
+	public static Timer create(TimerRequestDto dto, Raid raid, UserDetailsImpl userDetails) {
 		return Timer.builder()
 				.clientId(dto.getClientId())
 				.startAt(dto.getStartAt())
@@ -64,12 +68,14 @@ public class Timer {
 				.voteCount(dto.getVoteCount())
 				.server(dto.getServer())
 				.raid(raid)
+				.user(userDetails != null ? userDetails.getUser() : null)
 				.build();
 	}
 	
 	public void increaseVoteCount() {
 		this.voteCount++;
 	}
+	
 	
 	
 }

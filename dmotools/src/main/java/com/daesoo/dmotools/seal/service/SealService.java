@@ -15,8 +15,8 @@ import com.daesoo.dmotools.common.entity.Seal;
 import com.daesoo.dmotools.common.entity.SealPrice;
 import com.daesoo.dmotools.common.repository.SealPriceRepository;
 import com.daesoo.dmotools.common.repository.SealRepository;
-import com.daesoo.dmotools.seal.SealPriceResponseDto;
-import com.daesoo.dmotools.seal.SealResponseDto;
+import com.daesoo.dmotools.seal.dto.response.SealPriceResponseDto;
+import com.daesoo.dmotools.seal.dto.response.SealResponseDto;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;

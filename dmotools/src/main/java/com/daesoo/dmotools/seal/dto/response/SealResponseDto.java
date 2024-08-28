@@ -1,4 +1,4 @@
-package com.daesoo.dmotools.seal;
+package com.daesoo.dmotools.seal.dto.response;
 
 import com.daesoo.dmotools.common.entity.Seal;
 
@@ -14,6 +14,8 @@ public class SealResponseDto {
 	
 	private String name;
 	
+	private String engName;
+	
 	private Integer maxIncrease;
 	
 	private String statType;
@@ -27,6 +29,7 @@ public class SealResponseDto {
     	return SealResponseDto.builder()
     			.id(seal.getId())
     			.name(seal.getName())
+    			.engName(seal.getEngName())
     			.maxIncrease(seal.getMaxIncrease())
     			.statType(seal.getStatType().name())
     			.buyable(seal.isBuyable())

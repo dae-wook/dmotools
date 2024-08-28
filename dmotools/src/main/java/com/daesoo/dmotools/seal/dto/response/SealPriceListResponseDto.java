@@ -1,4 +1,4 @@
-package com.daesoo.dmotools.seal;
+package com.daesoo.dmotools.seal.dto.response;
 
 import java.time.LocalDateTime;
 
@@ -9,23 +9,23 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class SealPriceResponseDto {
+public class SealPriceListResponseDto {
 	
 
+	private Long sealId;
+	
 	private Long id;
 	
 	private double price;
 	
 	private int regCount;
 	
-	private Long sealId;
-	
 	private LocalDateTime createdAt;
 	
 	private LocalDateTime modifiedAt;
     
-    public static SealPriceResponseDto of(SealPrice sealPrice) {
-    	return SealPriceResponseDto.builder()
+    public static SealPriceListResponseDto of(SealPrice sealPrice) {
+    	return SealPriceListResponseDto.builder()
     			.id(sealPrice.getId())
     			.price(sealPrice.getPrice())
     			.regCount(sealPrice.getRegCount())
