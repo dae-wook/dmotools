@@ -15,6 +15,6 @@ public class InventoryRequestDto {
 	
 	private int count;
 	
-	private int price;
+	private double price;
 	
 }

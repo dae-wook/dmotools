@@ -13,7 +13,7 @@ public class UserPriceResponseDto {
 	
 	private Long id;
 	
-    private Integer price;
+    private Double price;
 	
 	private Long userId;
     

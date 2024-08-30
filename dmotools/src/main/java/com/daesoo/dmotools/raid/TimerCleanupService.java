@@ -23,7 +23,7 @@ public class TimerCleanupService {
     private final AlarmService alarmService;
     
 
-    @Scheduled(fixedRate = 2000) // 1분마다 실행
+    @Scheduled(fixedRate = 60000) // 1분마다 실행
     @Transactional
     public void deleteExpiredTimers() {
         LocalDateTime now = LocalDateTime.now();

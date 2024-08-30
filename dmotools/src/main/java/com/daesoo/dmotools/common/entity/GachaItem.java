@@ -2,48 +2,39 @@ package com.daesoo.dmotools.common.entity;
 
 
 
-import com.daesoo.dmotools.seal.dto.request.InventoryRequestDto;
+import java.util.ArrayList;
+import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "user_prices")
+@Entity(name = "gacha_items")
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserPrice {
+public class GachaItem {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-    
-    private Double customPrice;
 	
 	@ManyToOne
-	private Seal seal;
+	private Gatcha gatcha;
 	
 	@ManyToOne
-	private User user;
+	private Item item;
 	
-	public static UserPrice create(InventoryRequestDto dto, User user, Seal seal) {
-		return UserPrice.builder()
-			.customPrice(dto.getPrice())
-			.seal(seal)
-			.user(user)
-			.build();
-	}
-
-	public void update(InventoryRequestDto dto) {
-		// TODO Auto-generated method stub
-		this.customPrice = dto.getPrice();
-		
-	}
+	private Float probability;
+	
+	private Integer rarity;
 }
