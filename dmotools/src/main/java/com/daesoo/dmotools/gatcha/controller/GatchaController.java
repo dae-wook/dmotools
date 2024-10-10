@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,10 +23,17 @@ public class GatchaController {
 
 	private final GatchaService gatchaService;
 	
-	@GetMapping
-	public ResponseDto<List<GatchaResponseDto>> getGatcha() {
+	@GetMapping("/{type}")
+	public ResponseDto<List<GatchaResponseDto>> getGatcha(@PathVariable("type") String type) {
 		
-		return ResponseDto.success(HttpStatus.OK, gatchaService.getGatcha());
+		return ResponseDto.success(HttpStatus.OK, gatchaService.getGatcha(type));
+		
+	}
+	
+	@GetMapping
+	public ResponseDto<List<GatchaResponseDto>> getAllGatcha() {
+		
+		return ResponseDto.success(HttpStatus.OK, gatchaService.getGatcha(null));
 		
 	}
 	

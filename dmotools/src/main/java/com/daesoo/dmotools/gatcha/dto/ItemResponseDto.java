@@ -15,10 +15,13 @@ public class ItemResponseDto {
 	
 	private String name;
 	
+	private String engName;
+	
 	public static ItemResponseDto of(Item item) {
 		return ItemResponseDto.builder()
 				.id(item.getId())
 				.name(item.getName())
+				.engName(item.getEngName())
 				.build();
 	}
 }

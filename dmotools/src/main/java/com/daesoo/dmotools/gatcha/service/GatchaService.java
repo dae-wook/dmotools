@@ -15,9 +15,11 @@ public class GatchaService {
 	
 	private final GatchaRepository gatchaRepository;
 	
-	public List<GatchaResponseDto> getGatcha() {
-		
-		return gatchaRepository.findAllByVisibleTrue().stream().map(GatchaResponseDto::of).toList();
+	public List<GatchaResponseDto> getGatcha(String type) {
+		if (type == null) {
+			return gatchaRepository.findAllByVisibleTrue().stream().map(GatchaResponseDto::of).toList();
+		}
+		return gatchaRepository.findAllByVisibleTrueAndType(type).stream().map(GatchaResponseDto::of).toList();
 	}
 
 }

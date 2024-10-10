@@ -29,6 +29,8 @@ public class Item {
 	@Column(nullable = false)
 	private String name;
 	
+	private String engName;
+	
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gatcha_id")
     private Gatcha gatcha;

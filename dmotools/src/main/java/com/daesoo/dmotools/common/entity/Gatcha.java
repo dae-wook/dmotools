@@ -39,6 +39,12 @@ public class Gatcha {
 	
 	private String type;
 	
+	private String category;
+	
+	private String engName;
+	
+	private String engCategory;
+	
 	@OneToMany(mappedBy = "gatcha")
     private List<Item> items = new ArrayList<>();
 	
