@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.daesoo.dmotools.common.dto.ErrorMessage;
+import com.daesoo.dmotools.common.dto.ServerType;
 import com.daesoo.dmotools.common.dto.StatType;
 import com.daesoo.dmotools.common.entity.Seal;
 import com.daesoo.dmotools.common.entity.SealPrice;
@@ -71,15 +72,15 @@ public class SealService {
 	}
 
 	@Transactional
-	public List<SealPriceResponseDto> getOnePrice(String sortBy) {
-		List<SealPrice> sealPriceList = new ArrayList<>(); 
+	public List<SealPriceResponseDto> getOnePrice(String sortBy, ServerType serverType) {
+		List<SealPrice> sealPriceList = new ArrayList<>();
 		switch(sortBy) {
 			case "regCount" : sealPriceList = sealPriceRepository.findLatestSealPricesOrderedByRegCount(); break;
-			case "modifiedAt" : sealPriceList = sealPriceRepository.findLatestSealPrices(); break;
+			case "modifiedAt" : sealPriceList = sealPriceRepository.findLatestSealPricesByServerType(serverType.name()); break;
 			default : throw new IllegalArgumentException(ErrorMessage.WRONG_SORT_PARAMETER.getMessage());
 		}
 				
-		
+		System.out.println(sealPriceList.size());
 		
 		return sealPriceList.stream().map(SealPriceResponseDto :: of).toList();
 	}

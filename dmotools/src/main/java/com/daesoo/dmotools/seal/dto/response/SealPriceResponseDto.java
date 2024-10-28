@@ -20,6 +20,8 @@ public class SealPriceResponseDto {
 	
 	private Long sealId;
 	
+	private String server;
+	
 	private LocalDateTime createdAt;
 	
 	private LocalDateTime modifiedAt;
@@ -30,6 +32,7 @@ public class SealPriceResponseDto {
     			.price(sealPrice.getPrice())
     			.regCount(sealPrice.getRegCount())
     			.sealId(sealPrice.getSeal().getId())
+    			.server(sealPrice.getServerType() != null ? sealPrice.getServerType().name() : null)
     			.createdAt(sealPrice.getCreatedAt())
     			.modifiedAt(sealPrice.getModifiedAt())
     			.build();

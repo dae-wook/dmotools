@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.daesoo.dmotools.common.jwt.JwtAuthFilter;
@@ -49,6 +50,23 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 
         return http.build();
     }
+    
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry.addMapping("/**")
+//                        .allowedOrigins(
+//                            "http://localhost:3838", 
+//                            "https://dmo-tools.vercel.app", 
+//                            "https://dmo-tools-dev.vercel.app", 
+//                            "https://dmo.greuta.org"
+//                        );
+//                registry.addMapping("/api/alarms/**").allowedOrigins();
+//            }
+//        };
+//    }
     
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {

@@ -1,7 +1,11 @@
 package com.daesoo.dmotools.common.entity;
 
+import com.daesoo.dmotools.common.dto.ServerType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,6 +30,9 @@ public class SealPrice extends TimeStamp{
 	private double price;
 	
 	private int regCount;
+	
+	@Enumerated(EnumType.STRING)
+	private ServerType serverType;
 	
 	@ManyToOne
 	private Seal seal;

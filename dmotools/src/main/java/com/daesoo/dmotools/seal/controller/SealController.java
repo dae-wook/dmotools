@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.daesoo.dmotools.common.dto.ResponseDto;
+import com.daesoo.dmotools.common.dto.ServerType;
 import com.daesoo.dmotools.common.dto.StatType;
 import com.daesoo.dmotools.seal.dto.response.SealPriceResponseDto;
 import com.daesoo.dmotools.seal.dto.response.SealResponseDto;
@@ -26,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/seals")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3838", "https://dmo-tools.vercel.app", "https://dmo-tools-dev.vercel.app"})
+@CrossOrigin(origins = {"http://localhost:3838", "https://dmo-tools.vercel.app", "https://dmo-tools-dev.vercel.app", "https://dmo.greuta.org", "https://www.greuta.org"})
 @Slf4j
 public class SealController {
 	
@@ -56,9 +57,10 @@ public class SealController {
 	
 	@GetMapping("/price")
 	public ResponseDto<List<SealPriceResponseDto>> getOnePrice(
-			@RequestParam(name = "sortBy", defaultValue = "regCount") String sortBy) {
+			@RequestParam(name = "sortBy", defaultValue = "regCount") String sortBy,
+			@RequestParam(name = "server", defaultValue = "luce") ServerType server) {
 		
-		return ResponseDto.success(HttpStatus.OK, sealService.getOnePrice(sortBy));
+		return ResponseDto.success(HttpStatus.OK, sealService.getOnePrice(sortBy, server));
 	}
 	
 	@GetMapping("/{sealId}/price")
