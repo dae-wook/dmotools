@@ -32,6 +32,13 @@ public class InventoryController {
 	
 	private final InventoryService inventoryService;
 	
+	@GetMapping("/renew")
+	public ResponseDto<String> getUserSealsByLoginUser() {
+		inventoryService.renew();
+		
+		return ResponseDto.success(HttpStatus.OK, "성공");
+	}
+	
 	@GetMapping("/count")
 	public ResponseDto<List<UserSealResponseDto>> getUserSealsByLoginUser(
 			@AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -42,6 +49,18 @@ public class InventoryController {
 		
 		return ResponseDto.success(HttpStatus.OK, inventoryService.getInventoryByLoginUser(userDetails.getUser()));
 	}
+	
+	@GetMapping("/{characterId}/count")
+	public ResponseDto<List<UserSealResponseDto>> getUserSealsByLoginUser(
+			@PathVariable("characterId")Long characterId) {
+		
+//		if (userDetails == null) {
+//	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+//	    }
+		
+		return ResponseDto.success(HttpStatus.OK, inventoryService.getInventoryByLoginUser(characterId, null));
+	}
+	
 	
 	@GetMapping("/price")
 	public ResponseDto<List<UserPriceResponseDto>> getUserPriceByLoginUser(
@@ -66,6 +85,21 @@ public class InventoryController {
 		
 		
 		return ResponseDto.success(HttpStatus.OK, inventoryService.updateSealCount(userDetails.getUser(), sealId, dto));
+	}
+	
+	@PutMapping("/{characterId}/{sealId}/count")
+	public ResponseDto<UserSealResponseDto> updateSealCountByCharacter(
+			@AuthenticationPrincipal UserDetailsImpl userDetails,
+			@PathVariable("sealId") Long sealId,
+			@PathVariable("characterId") Long characterId,
+			@RequestBody InventoryRequestDto dto) {	
+		
+		if (userDetails == null) {
+	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	    }
+		
+		
+		return ResponseDto.success(HttpStatus.OK, inventoryService.updateSealCountByCharacter(userDetails.getUser(), sealId, characterId, dto));
 	}
 	
 	@PutMapping("/{sealId}/price")

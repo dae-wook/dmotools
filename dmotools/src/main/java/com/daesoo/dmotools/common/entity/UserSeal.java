@@ -4,6 +4,8 @@ package com.daesoo.dmotools.common.entity;
 
 import com.daesoo.dmotools.seal.dto.request.InventoryRequestDto;
 
+import com.daesoo.dmotools.common.entity.Character;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -33,17 +35,27 @@ public class UserSeal {
 	@ManyToOne
 	private User user;
 	
-	public static UserSeal create(InventoryRequestDto dto, User user, Seal seal) {
+	@ManyToOne
+	private Character character;
+	
+	public static UserSeal create(InventoryRequestDto dto, User user, Seal seal, Character character) {
 		return UserSeal.builder()
 			.count(dto.getCount())
 			.seal(seal)
 			.user(user)
+			.character(character)
 			.build();
 	}
 
 	public void update(InventoryRequestDto dto) {
 		// TODO Auto-generated method stub
 		this.count = dto.getCount();
+		
+	}
+	
+	public void update(Character character) {
+		// TODO Auto-generated method stub
+		this.character = character;
 		
 	}
 }

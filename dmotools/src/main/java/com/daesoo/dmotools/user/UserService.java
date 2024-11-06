@@ -29,9 +29,9 @@ public class UserService {
 	
 	@Transactional
 	public UserResponseDto login(String idToken) throws GeneralSecurityException, IOException {
-		
+		System.out.println(idToken);
 		String email = googleAuth.getUserEmail(idToken);
-		
+		System.out.println(email);
 		Optional<User> optionalUser = userRepository.findByEmail(email);
 		
 		if(!optionalUser.isPresent()) {

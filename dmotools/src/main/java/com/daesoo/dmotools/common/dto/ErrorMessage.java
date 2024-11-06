@@ -14,6 +14,8 @@ public enum ErrorMessage {
     AUTHENTICATION_FAILED("JWT가 올바르지 않습니다"),
     COMMENT_NOT_FOUND("해당 댓글이 존재하지 않습니다."),
     CLIENT_NOT_FOUND("클라이언트가 존재하지 않습니다."),
+    CHARACTER_SLOT_IS_FULL("캐릭터는 최대 5개까지 생성 가능합니다"),
+    CHARACTER_NOT_FOUND("캐릭터를 찾을 수 없습니다."),
     DUPLICATE_REQUEST("중복된 요청입니다."),
     EMAIL_AUTH_INFO_NOT_FOUND("이메일 인증 정보가 없습니다"),
     EMAIL_DUPLICATION("email이 중복됐습니다."),
