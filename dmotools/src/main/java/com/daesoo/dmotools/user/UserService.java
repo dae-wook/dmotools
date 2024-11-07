@@ -10,7 +10,9 @@ import com.daesoo.dmotools.common.auth.GoogleAuth;
 import com.daesoo.dmotools.common.auth.GoogleIdTokenVerifier;
 import com.daesoo.dmotools.common.dto.ErrorMessage;
 import com.daesoo.dmotools.common.entity.User;
+import com.daesoo.dmotools.common.entity.Character;
 import com.daesoo.dmotools.common.jwt.JwtUtil;
+import com.daesoo.dmotools.common.repository.CharacterRepository;
 import com.daesoo.dmotools.common.repository.UserRepository;
 import com.daesoo.dmotools.user.dto.SignupRequestDto;
 import com.daesoo.dmotools.user.dto.UserResponseDto;
@@ -23,15 +25,14 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
 
 	private final UserRepository userRepository;
+	private final CharacterRepository characterRepository;
 	private final GoogleAuth googleAuth;
 	private final JwtUtil jwtUtil;
 	
 	
 	@Transactional
 	public UserResponseDto login(String idToken) throws GeneralSecurityException, IOException {
-		System.out.println(idToken);
 		String email = googleAuth.getUserEmail(idToken);
-		System.out.println(email);
 		Optional<User> optionalUser = userRepository.findByEmail(email);
 		
 		if(!optionalUser.isPresent()) {
@@ -40,7 +41,11 @@ public class UserService {
 		
 		User user = optionalUser.get();
 		
+		Optional<Character> optionalCharacter = characterRepository.findByUser(user);
 		
+		if(optionalCharacter.isEmpty()) {
+			characterRepository.save(Character.create("Character1", user));
+		}
 		
 		return UserResponseDto.of(user, jwtUtil.createToken(user));
 		
@@ -60,6 +65,8 @@ public class UserService {
 		
 		
 		User user = userRepository.save(User.create(email, signupRequestDto.getNickname()));
+		
+		characterRepository.save(Character.create("Character1", user));
 		return UserResponseDto.of(user, jwtUtil.createToken(user));
 	}
 

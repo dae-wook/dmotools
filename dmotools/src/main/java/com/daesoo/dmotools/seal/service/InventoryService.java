@@ -108,7 +108,7 @@ public class InventoryService {
 		UserSeal userSeal = inventoryRepository.findByUserAndSealAndCharacter(user, seal, character)
 			    .orElseGet(() -> inventoryRepository.save(UserSeal.create(dto, user, seal, character)));
 		
-		if(character.getUser().getId() != userSeal.getUser().getId()) {
+		if(!character.getUser().getId().equals(userSeal.getUser().getId())) {
 			throw new IllegalArgumentException(ErrorMessage.ACCESS_DENIED.getMessage());
 		}
 		
