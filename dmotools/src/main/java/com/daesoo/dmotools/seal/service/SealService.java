@@ -33,7 +33,7 @@ public class SealService {
 	@Transactional
 	public List<SealResponseDto> getAllSeals() {
 		
-		return sealRepository.findAll().stream().map(SealResponseDto :: of).toList();
+		return sealRepository.findAllByOrderByStatTypeAsc().stream().map(SealResponseDto :: of).toList();
 	}
 
 	@Transactional

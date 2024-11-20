@@ -29,11 +29,15 @@ public class TimerCleanupService {
         LocalDateTime now = LocalDateTime.now();
         List<Timer> expiredTimers = timerRepository.findAllByStartAtBefore(now);
         for(Timer timer : expiredTimers) {
+        	
+        	timerRepository.deleteAll(timerRepository.findAllByRaid(timer.getRaid()));
+        	
         	if(timer.getUser() != null) {
         		timer.getUser().increaseCompleteCount();
         		
         	}
         }
+        
         timerRepository.deleteAll(expiredTimers);
 //        for(Timer timer : expiredTimers) {
 //        	

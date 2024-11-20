@@ -12,6 +12,8 @@ import com.daesoo.dmotools.common.entity.Timer;
 public interface TimerRepository extends JpaRepository<Timer, Long>{
 	
 	List<Timer> findAllByStartAtBefore(LocalDateTime dateTime);
+	
+	List<Timer> findAllByRaid(Raid raid);
 
 	List<Timer> findAllByServer(ServerType server);
 

@@ -2,15 +2,15 @@ package com.daesoo.dmotools.user;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.daesoo.dmotools.common.auth.GoogleAuth;
-import com.daesoo.dmotools.common.auth.GoogleIdTokenVerifier;
 import com.daesoo.dmotools.common.dto.ErrorMessage;
-import com.daesoo.dmotools.common.entity.User;
 import com.daesoo.dmotools.common.entity.Character;
+import com.daesoo.dmotools.common.entity.User;
 import com.daesoo.dmotools.common.jwt.JwtUtil;
 import com.daesoo.dmotools.common.repository.CharacterRepository;
 import com.daesoo.dmotools.common.repository.UserRepository;
@@ -41,9 +41,9 @@ public class UserService {
 		
 		User user = optionalUser.get();
 		
-		Optional<Character> optionalCharacter = characterRepository.findByUser(user);
+		List<Character> characterList = characterRepository.findAllByUser(user);
 		
-		if(optionalCharacter.isEmpty()) {
+		if(characterList.size() <= 0) {
 			characterRepository.save(Character.create("Character1", user));
 		}
 		

@@ -14,5 +14,7 @@ public interface SealRepository extends JpaRepository<Seal, Long>{
 	Page<Seal> findAllByStatType(Pageable pageable, StatType statType);
 
 	List<Seal> findAllByStatType(StatType statType);
+	
+	List<Seal> findAllByOrderByStatTypeAsc();
 
 }

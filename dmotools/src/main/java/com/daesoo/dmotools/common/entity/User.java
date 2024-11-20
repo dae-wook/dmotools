@@ -40,6 +40,9 @@ public class User extends TimeStamp{
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<UserSeal> userSealList;
     
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Character> characterList;
+    
     public void modify(String nickname) {
     	this.nickname = nickname != null ? nickname : this.nickname;
     }
