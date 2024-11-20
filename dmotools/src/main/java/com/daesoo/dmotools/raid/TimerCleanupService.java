@@ -30,9 +30,11 @@ public class TimerCleanupService {
         List<Timer> sameRaidTimers = new ArrayList();
         for(Timer timer : expiredTimers) {
         	List<Timer> innerTimers = timerRepository.findAllByRaid(timer.getRaid());
-        	for(Timer sameTimer : innerTimers) {
-        		sameRaidTimers.add(sameTimer);
-        		alarmService.notify(TimerResponseDto.of(sameTimer), "time deleted", "removed", sameTimer.getServer());
+        	if(innerTimers.size() > 1) {
+        		for(Timer sameTimer : innerTimers) {
+        			sameRaidTimers.add(sameTimer);
+        			alarmService.notify(TimerResponseDto.of(sameTimer), "time deleted", "removed", sameTimer.getServer());
+        		}
         	}
         	timerRepository.deleteAll(timerRepository.findAllByRaid(timer.getRaid()));
         	
