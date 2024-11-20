@@ -10,6 +10,7 @@ public enum ErrorMessage {
 	ACCESS_DENIED("권한이 없습니다."),
     ALREADY_EXIST_COMMENT("이미 해당 게시글에 댓글을 작성한 사용자입니다."),
     ALREADY_VOTED("이미 투표했습니다."),
+    ALREADY_EXPIRED_TIMER("이미 만료된 타이머입니다."),
     AUTHENTICATION_CODE_MISSMATCH("인증코드가 일치하지 않습니다."),
     AUTHENTICATION_FAILED("JWT가 올바르지 않습니다"),
     COMMENT_NOT_FOUND("해당 댓글이 존재하지 않습니다."),

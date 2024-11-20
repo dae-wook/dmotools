@@ -1,15 +1,14 @@
 package com.daesoo.dmotools.raid;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.daesoo.dmotools.alarm.AlarmService;
 import com.daesoo.dmotools.common.entity.Timer;
-import com.daesoo.dmotools.common.entity.User;
 import com.daesoo.dmotools.common.repository.TimerRepository;
 
 import jakarta.transaction.Transactional;
@@ -28,8 +27,13 @@ public class TimerCleanupService {
     public void deleteExpiredTimers() {
         LocalDateTime now = LocalDateTime.now();
         List<Timer> expiredTimers = timerRepository.findAllByStartAtBefore(now);
+        List<Timer> sameRaidTimers = new ArrayList();
         for(Timer timer : expiredTimers) {
-        	
+        	List<Timer> innerTimers = timerRepository.findAllByRaid(timer.getRaid());
+        	for(Timer sameTimer : innerTimers) {
+        		sameRaidTimers.add(sameTimer);
+        		alarmService.notify(TimerResponseDto.of(sameTimer), "time deleted", "removed", sameTimer.getServer());
+        	}
         	timerRepository.deleteAll(timerRepository.findAllByRaid(timer.getRaid()));
         	
         	if(timer.getUser() != null) {
@@ -37,7 +41,7 @@ public class TimerCleanupService {
         		
         	}
         }
-        
+        timerRepository.deleteAll(sameRaidTimers);
         timerRepository.deleteAll(expiredTimers);
 //        for(Timer timer : expiredTimers) {
 //        	

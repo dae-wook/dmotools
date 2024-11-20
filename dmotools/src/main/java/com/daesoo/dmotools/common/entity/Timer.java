@@ -72,6 +72,13 @@ public class Timer {
 				.build();
 	}
 	
+	public boolean isExpired() {
+		if(this.startAt.isBefore(LocalDateTime.now())) {
+			return true;
+		}
+		return false;
+	}
+	
 	public void increaseVoteCount() {
 		this.voteCount++;
 	}

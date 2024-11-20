@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import com.daesoo.dmotools.common.entity.Client;
 import com.daesoo.dmotools.common.entity.Raid;
 import com.daesoo.dmotools.common.entity.Timer;
 import com.daesoo.dmotools.common.entity.TimerVote;
+import com.daesoo.dmotools.common.entity.User;
 import com.daesoo.dmotools.common.repository.ClientRepository;
 import com.daesoo.dmotools.common.repository.RaidRepository;
 import com.daesoo.dmotools.common.repository.TimerRepository;
@@ -113,6 +115,29 @@ public class RaidService {
 		alarmService.notify(responseDto, "time voted", "voted", timer.getServer());
 		
 		return responseDto;
+	}
+
+
+
+	@Transactional
+	public TimerResponseDto deleteTimer(Long timerId, User user) {
+
+		Timer timer = timerRepository.findById(timerId).orElseThrow(
+				() -> new IllegalArgumentException(ErrorMessage.TIMER_NOT_FOUND.getMessage())
+				);
+		
+		if(!timer.getUser().getId().equals(user.getId())) {
+			throw new IllegalArgumentException(ErrorMessage.ACCESS_DENIED.getMessage());
+		}
+		
+		if(timer.isExpired()) {
+			throw new IllegalArgumentException(ErrorMessage.ALREADY_EXPIRED_TIMER.getMessage());
+		}
+		
+		alarmService.notify(TimerResponseDto.of(timer), "time removed", "removed", timer.getServer());
+		timerRepository.delete(timer);
+		
+		return TimerResponseDto.of(timer);
 	}
 
 //	@Transactional
