@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/raids")
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:3838", "https://dmo-tools.vercel.app", "https://dmo-tools-dev.vercel.app", "https://dmo.greuta.org", "https://www.greuta.org"})
+@CrossOrigin(origins = {"http://localhost:3838", "https://dmo-tools.vercel.app", "https://dev-dmo.greuta.org", "https://dmo.greuta.org", "https://www.greuta.org"})
 public class RaidController {
 
 	private final RaidService raidService;
