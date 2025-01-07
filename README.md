@@ -1,4 +1,4 @@
-# [DMO tools] (https://dmo.greuta.org)
+# <a href="https://dmo.greuta.org/" target="_blank">DMO tools</a>
 
 - 디지몬 마스터즈 도구 모음 사이트
 - 씰 계산기, 레이드 타이머, 뽑기 시뮬레이터 기능
