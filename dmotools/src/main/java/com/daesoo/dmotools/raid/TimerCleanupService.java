@@ -29,7 +29,7 @@ public class TimerCleanupService {
         List<Timer> expiredTimers = timerRepository.findAllByStartAtBefore(now);
         List<Timer> sameRaidTimers = new ArrayList();
         for(Timer timer : expiredTimers) {
-        	List<Timer> innerTimers = timerRepository.findAllByRaid(timer.getRaid());
+        	List<Timer> innerTimers = timerRepository.findAllByRaidAndChannel(timer.getRaid(), timer.getChannel());
         	if(innerTimers.size() > 1) {
         		for(Timer sameTimer : innerTimers) {
         			sameRaidTimers.add(sameTimer);

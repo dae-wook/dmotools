@@ -14,6 +14,8 @@ public interface TimerRepository extends JpaRepository<Timer, Long>{
 	List<Timer> findAllByStartAtBefore(LocalDateTime dateTime);
 	
 	List<Timer> findAllByRaid(Raid raid);
+	
+	List<Timer> findAllByRaidAndChannel(Raid raid, int channel);
 
 	List<Timer> findAllByServer(ServerType server);
 
