@@ -1,6 +1,7 @@
 package com.daesoo.dmotools.common.jwt;
 
 import java.security.Key;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Date;
 
@@ -11,7 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.daesoo.dmotools.common.entity.RefreshToken;
 import com.daesoo.dmotools.common.entity.User;
+import com.daesoo.dmotools.common.repository.RefreshTokenRepository;
 import com.daesoo.dmotools.user.UserDetailsServiceImpl;
 
 import io.jsonwebtoken.Claims;
@@ -32,9 +35,11 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JwtUtil {
     public static final String AUTHORIZATION_HEADER = "Authorization";
+    public static final String REFRESH_HEADER = "Refresh";
     public static final String AUTHORIZATION_KEY = "auth";
     private static final String BEARER_PREFIX = "Bearer ";
-    private static final long TOKEN_TIME = 365 * 24 * 60 * 60 * 1000L;  // TODO: 현재는 임시적으로 이렇게 두고, 나중에 refresh token 을 저장할 필요가 있음
+    private static final long ACCESS_TOKEN_TIME = 6000L;           // 30분
+    private static final long REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60 * 1000L; // 7일
 
     @Value("${jwt.secret.key}")
     private String secretKey;
@@ -58,7 +63,7 @@ public class JwtUtil {
     }
 
     // 토큰 생성
-    public String createToken(User user) {
+    public String createAccessToken(User user) {
         Date date = new Date();
 
         return BEARER_PREFIX +
@@ -66,10 +71,32 @@ public class JwtUtil {
                         .setSubject(user.getEmail())
                         .claim(AUTHORIZATION_KEY, "")
                         .claim("nickname", user.getNickname())
-                        .setExpiration(new Date(date.getTime() + TOKEN_TIME))
+                        .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME))
                         .setIssuedAt(date)
                         .signWith(key, signatureAlgorithm)
                         .compact();
+    }
+    
+    // Refresh Token 생성
+    public String createRefreshToken(User user) {
+        Date date = new Date();
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME))
+                .setIssuedAt(date)
+                .signWith(key, signatureAlgorithm)
+                .compact();
+    }
+    
+    // Refresh Token 검증
+    public boolean validateRefreshToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            log.error("Refresh Token validation failed: {}", e.getMessage());
+            return false;
+        }
     }
 
     // 토큰 검증
@@ -77,10 +104,11 @@ public class JwtUtil {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
+        }catch (ExpiredJwtException e) {
+                log.warn("Expired JWT token, 만료된 JWT token 입니다.");
+                throw e;
         } catch (SecurityException | MalformedJwtException e) {
             log.warn("Invalid JWT signature, 유효하지 않은 JWT 서명 입니다.");
-        } catch (ExpiredJwtException e) {
-            log.warn("Expired JWT token, 만료된 JWT token 입니다.");
         } catch (UnsupportedJwtException e) {
             log.warn("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
         } catch (IllegalArgumentException e) {

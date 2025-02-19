@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daesoo.dmotools.common.dto.ErrorMessage;
 import com.daesoo.dmotools.common.dto.ResponseDto;
+import com.daesoo.dmotools.common.exception.UnauthorizedException;
 import com.daesoo.dmotools.seal.dto.request.InventoryRequestDto;
 import com.daesoo.dmotools.seal.dto.response.UserPriceResponseDto;
 import com.daesoo.dmotools.seal.dto.response.UserSealResponseDto;
@@ -44,7 +45,7 @@ public class InventoryController {
 			@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.OK, inventoryService.getInventoryByLoginUser(userDetails.getUser()));
@@ -67,7 +68,7 @@ public class InventoryController {
 			@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.OK, inventoryService.getUserPriceByLoginUser(userDetails.getUser()));
@@ -80,7 +81,7 @@ public class InventoryController {
 			@RequestBody InventoryRequestDto dto) {	
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		

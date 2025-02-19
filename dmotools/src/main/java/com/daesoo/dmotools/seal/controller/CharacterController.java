@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daesoo.dmotools.common.dto.ErrorMessage;
 import com.daesoo.dmotools.common.dto.ResponseDto;
+import com.daesoo.dmotools.common.exception.UnauthorizedException;
 import com.daesoo.dmotools.seal.dto.response.CharacterResponseDto;
 import com.daesoo.dmotools.seal.service.CharacterService;
 import com.daesoo.dmotools.user.UserDetailsImpl;
@@ -38,7 +39,7 @@ public class CharacterController {
 			) {
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.OK, characterService.getCharactersByLoginUser(userDetails.getUser()));
@@ -51,7 +52,7 @@ public class CharacterController {
 			) {
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.OK, characterService.createCharacterByLoginMember(name, userDetails.getUser()));
@@ -64,7 +65,7 @@ public class CharacterController {
 			@AuthenticationPrincipal UserDetailsImpl userDetails){
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.OK, characterService.modifyCharacter(characterId, name, userDetails.getUser()));
@@ -76,7 +77,7 @@ public class CharacterController {
 			@AuthenticationPrincipal UserDetailsImpl userDetails){
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.OK, characterService.deleteCharacter(characterId, userDetails.getUser()));

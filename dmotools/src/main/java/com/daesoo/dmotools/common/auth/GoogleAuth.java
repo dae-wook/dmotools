@@ -22,7 +22,6 @@ public class GoogleAuth {
     @Value("${google.client.id}")
     private String CLIENT_ID;
     public String getUserEmail(String idTokenString) throws GeneralSecurityException, IOException {
-
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(CLIENT_ID)).build();
 
@@ -46,6 +45,7 @@ public class GoogleAuth {
             return email;
 
         } else {
+        	System.out.println("idTokenisNull");
             return null;
         }
 

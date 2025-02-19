@@ -19,16 +19,19 @@ public class UserResponseDto {
 
     private String nickname;
     
-    private String token;
+    private String accessToken;
+    
+    private String refreshToken;
     
     private int timerCompleteCount;
     
-    public static UserResponseDto of(User user, String token) {
+    public static UserResponseDto of(User user, String accessToken, String refreshToken) {
     	return UserResponseDto.builder()
     			.id(user.getId())
     			.email(user.getEmail())
     			.nickname(user.getNickname())
-    			.token(token)
+    			.accessToken(accessToken)
+    			.refreshToken(refreshToken)
     			.timerCompleteCount(user.getTimerCompleteCount())
     			.build();
     }

@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/alarms")
 @RequiredArgsConstructor
-//@CrossOrigin(origins = {"https://dmo-tools-dev.vercel.app"})
+@CrossOrigin(origins = {"http://localhost:3838"})
 @Slf4j
 public class AlarmController {
 	
@@ -45,7 +46,7 @@ public class AlarmController {
     }
     
     @GetMapping("/client-id")
-    public ResponseDto<Long> getClientIp(HttpServletRequest request) {
+    public ResponseDto<Long> getClientId(HttpServletRequest request) {
         String ipAddress = request.getHeader("X-Forwarded-For");
         if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
             ipAddress = request.getHeader("X-Real-IP");
@@ -67,20 +68,19 @@ public class AlarmController {
         }
     }
     
-    public class IpController {
 
-        @GetMapping("/client-ip")
-        public String getClientIp(HttpServletRequest request) {
-            String ipAddress = request.getHeader("X-Forwarded-For");
-            if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getHeader("X-Real-IP");
-            }
-            if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
-                ipAddress = request.getRemoteAddr();
-            }
-            return "Client IP: " + ipAddress;
+    @GetMapping("/client-ip")
+    public String getClientIp(HttpServletRequest request) {
+        String ipAddress = request.getHeader("X-Forwarded-For");
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getHeader("X-Real-IP");
         }
+        if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
+            ipAddress = request.getRemoteAddr();
+        }
+        return "Client IP: " + ipAddress;
     }
+    
     
     @PostMapping(value = "/{clientId}/dis-subscribe")
     public boolean cancel(@PathVariable("clientId") Long clientId) {

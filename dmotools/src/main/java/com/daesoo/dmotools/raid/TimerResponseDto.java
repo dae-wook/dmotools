@@ -43,7 +43,7 @@ public class TimerResponseDto {
 				.voteCount(timer.getVoteCount())
 				.server(timer.getServer().name())
 				.raidId(timer.getRaid().getId())
-				.user(timer.getUser() != null ? UserResponseDto.of(timer.getUser(), null) : null)
+				.user(timer.getUser() != null ? UserResponseDto.of(timer.getUser(), null, null) : null)
 				.build();
 	}
 	

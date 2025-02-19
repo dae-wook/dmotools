@@ -139,6 +139,23 @@ public class RaidService {
 		
 		return TimerResponseDto.of(timer);
 	}
+	
+	@Transactional
+	public TimerResponseDto forceDeleteTimer(Long timerId) {
+
+		Timer timer = timerRepository.findById(timerId).orElseThrow(
+				() -> new IllegalArgumentException(ErrorMessage.TIMER_NOT_FOUND.getMessage())
+				);
+		
+		if(timer.isExpired()) {
+			throw new IllegalArgumentException(ErrorMessage.ALREADY_EXPIRED_TIMER.getMessage());
+		}
+		
+		alarmService.notify(TimerResponseDto.of(timer), "time removed", "removed", timer.getServer());
+		timerRepository.delete(timer);
+		
+		return TimerResponseDto.of(timer);
+	}
 
 //	@Transactional
 //	public List<TimerResponseDto> getTimers(ServerType server) {

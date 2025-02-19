@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.daesoo.dmotools.common.dto.ErrorMessage;
 import com.daesoo.dmotools.common.dto.ResponseDto;
 import com.daesoo.dmotools.common.dto.ServerType;
+import com.daesoo.dmotools.common.exception.UnauthorizedException;
 import com.daesoo.dmotools.user.UserDetailsImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -56,10 +57,17 @@ public class RaidController {
 			@AuthenticationPrincipal UserDetailsImpl userDetails) {
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.CREATED, raidService.deleteTimer(timerId, userDetails.getUser()));
+	}
+	
+	@DeleteMapping("/{timerId}/force")
+	public ResponseDto<TimerResponseDto> forceDeleteTimer(
+			@PathVariable("timerId") Long timerId) {
+		
+		return ResponseDto.success(HttpStatus.CREATED, raidService.forceDeleteTimer(timerId));
 	}
 	
 	

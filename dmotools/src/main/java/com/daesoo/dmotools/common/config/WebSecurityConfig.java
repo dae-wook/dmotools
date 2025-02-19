@@ -16,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.daesoo.dmotools.common.jwt.JwtAuthFilter;
 import com.daesoo.dmotools.common.jwt.JwtUtil;
+import com.daesoo.dmotools.user.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class WebSecurityConfig implements WebMvcConfigurer{
 	
 	private final JwtUtil jwtUtil;
+	private final UserService userService;
 
 	@Bean
     public PasswordEncoder passwordEncoder() {
@@ -43,7 +45,7 @@ public class WebSecurityConfig implements WebMvcConfigurer{
 	        .csrf(AbstractHttpConfigurer::disable)
 	        .authorizeHttpRequests((authorizeRequests) ->
 	        	authorizeRequests.anyRequest().permitAll()
-	        .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)
+	        .and().addFilterBefore(new JwtAuthFilter(jwtUtil, userService), UsernamePasswordAuthenticationFilter.class)
 	        );
 
 
@@ -51,22 +53,16 @@ public class WebSecurityConfig implements WebMvcConfigurer{
         return http.build();
     }
     
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**")
-//                        .allowedOrigins(
-//                            "http://localhost:3838", 
-//                            "https://dmo-tools.vercel.app", 
-//                            "https://dmo-tools-dev.vercel.app", 
-//                            "https://dmo.greuta.org"
-//                        );
-//                registry.addMapping("/api/alarms/**").allowedOrigins();
-//            }
-//        };
-//    }
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                .exposedHeaders("Authorization");
+            }
+        };
+    }
     
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {

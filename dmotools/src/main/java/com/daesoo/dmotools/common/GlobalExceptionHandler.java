@@ -15,6 +15,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.daesoo.dmotools.common.dto.ErrorResponseDto;
 import com.daesoo.dmotools.common.dto.ErrorType;
 import com.daesoo.dmotools.common.dto.ResponseDto;
+import com.daesoo.dmotools.common.exception.UnauthorizedException;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -37,6 +38,14 @@ public class GlobalExceptionHandler {
     	log.error(" occurred: {}", ex.getMessage());
     	ErrorResponseDto errorResponseDto = ErrorResponseDto.of(ErrorType.ILLEGAL_ARGUMENT_EXCEPTION, ex.getMessage());
         return ResponseDto.fail(HttpStatus.BAD_REQUEST, errorResponseDto);
+    }
+    
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseDto<ErrorResponseDto> handleAuthenticationException(UnauthorizedException ex) {
+    	log.error(" occurred: {}", ex.getMessage());
+    	ErrorResponseDto errorResponseDto = ErrorResponseDto.of(ErrorType.UNATHORIZED_EXCEPTION, ex.getMessage());
+        return ResponseDto.fail(HttpStatus.UNAUTHORIZED, errorResponseDto);
     }
     
     @ExceptionHandler(MethodArgumentNotValidException.class)

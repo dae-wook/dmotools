@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.daesoo.dmotools.common.dto.ErrorMessage;
 import com.daesoo.dmotools.common.dto.ResponseDto;
+import com.daesoo.dmotools.common.exception.UnauthorizedException;
 import com.daesoo.dmotools.user.UserDetailsImpl;
 import com.daesoo.dmotools.user.UserService;
 import com.daesoo.dmotools.user.dto.SignupRequestDto;
@@ -53,7 +54,7 @@ public class UserController {
 			@RequestParam("nickname") String nickname) {
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.OK, userService.modifyUser(userDetails.getUser(),nickname));
@@ -63,7 +64,7 @@ public class UserController {
 	public ResponseDto<Boolean> resign(@AuthenticationPrincipal UserDetailsImpl userDetails) throws Exception {
 		
 		if (userDetails == null) {
-	        throw new IllegalArgumentException(ErrorMessage.UNAHTHORIZED.getMessage());
+	        throw new UnauthorizedException(ErrorMessage.UNAHTHORIZED.getMessage());
 	    }
 		
 		return ResponseDto.success(HttpStatus.OK, userService.resign(userDetails.getUser())); 
