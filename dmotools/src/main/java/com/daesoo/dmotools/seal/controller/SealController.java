@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.daesoo.dmotools.common.dto.ResponseDto;
 import com.daesoo.dmotools.common.dto.ServerType;
 import com.daesoo.dmotools.common.dto.StatType;
+import com.daesoo.dmotools.seal.dto.response.SealPriceHistoryResponseDto;
 import com.daesoo.dmotools.seal.dto.response.SealPriceResponseDto;
 import com.daesoo.dmotools.seal.dto.response.SealResponseDto;
 import com.daesoo.dmotools.seal.service.SealService;
@@ -68,8 +69,14 @@ public class SealController {
 			@PathVariable("sealId") Long sealId,
 			@RequestParam(name = "page", defaultValue = "1") Integer page,
 			@RequestParam(name = "size", defaultValue = "5") Integer size,
-			@RequestParam(name = "sortBy", defaultValue = "regCount") String sortBy) {
+			@RequestParam(name = "sortBy", defaultValue = "createdAt") String sortBy) {
 		
 		return ResponseDto.success(HttpStatus.OK, sealService.getSealPrice(sealId, page, size, sortBy));
+	}
+	
+	@GetMapping("/price/history")
+	public ResponseDto<List<SealPriceHistoryResponseDto>> getSealPriceHistory() {
+		
+		return ResponseDto.success(HttpStatus.OK, sealService.getSealPriceHistory());
 	}
 }

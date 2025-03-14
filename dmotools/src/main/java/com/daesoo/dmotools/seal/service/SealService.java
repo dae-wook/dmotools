@@ -2,6 +2,8 @@ package com.daesoo.dmotools.seal.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,6 +18,8 @@ import com.daesoo.dmotools.common.entity.Seal;
 import com.daesoo.dmotools.common.entity.SealPrice;
 import com.daesoo.dmotools.common.repository.SealPriceRepository;
 import com.daesoo.dmotools.common.repository.SealRepository;
+import com.daesoo.dmotools.seal.dto.SealPriceHistoryDto;
+import com.daesoo.dmotools.seal.dto.response.SealPriceHistoryResponseDto;
 import com.daesoo.dmotools.seal.dto.response.SealPriceResponseDto;
 import com.daesoo.dmotools.seal.dto.response.SealResponseDto;
 
@@ -96,6 +100,23 @@ public class SealService {
 		
 		
 		return sealPriceRepository.findAllBySeal(pageable, seal).map(SealPriceResponseDto::of);
+	}
+	
+	@Transactional
+	public List<SealPriceHistoryResponseDto> getSealPriceHistory() {
+	    List<SealPrice> sealPriceList = sealPriceRepository.findAll();
+
+	    Map<Long, List<SealPriceHistoryDto>> sealPriceHistoryMap = sealPriceList.parallelStream()
+	        .collect(Collectors.groupingBy(
+	            sealPrice -> sealPrice.getSeal().getId(),
+	            Collectors.mapping(sealPrice -> SealPriceHistoryDto.create(sealPrice), // DTO로 변환
+	                Collectors.toList())
+	        ));
+
+	    // Map을 List<SealPriceHistoryResponseDto>로 변환
+	    return sealPriceHistoryMap.entrySet().stream()
+	        .map(entry -> SealPriceHistoryResponseDto.of(entry.getKey(), entry.getValue()))
+	        .collect(Collectors.toList());
 	}
 
 }
