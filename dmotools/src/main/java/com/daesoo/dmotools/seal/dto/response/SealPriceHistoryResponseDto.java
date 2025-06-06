@@ -14,12 +14,12 @@ public class SealPriceHistoryResponseDto {
 
 	private Long sealId;
 	
-	private List<SealPriceHistoryDto> hisotry;
+	private List<SealPriceHistoryDto> history;
     
     public static SealPriceHistoryResponseDto of(Long sealId, List<SealPriceHistoryDto> history) {
     	return SealPriceHistoryResponseDto.builder()
     			.sealId(sealId)
-    			.hisotry(history)
+    			.history(history)
     			.build();
     }
 
